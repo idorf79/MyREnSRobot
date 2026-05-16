@@ -6,7 +6,18 @@ Start with an up-to-date Ubuntu Server 24.04 version
 1. Disable automatic upgrade
 
 ```bash
+sudo systemctl stop unattended-upgrades.service
 sudo systemctl disable unattended-upgrades.service
+```
+
+1. Set max resolution for HDMI
+
+put this into '/boot/firmware/config.txt', under section '[all]':
+
+```text
+hdmi_group=2
+hdmi_mode=82
+video=HDMI-A-A:1920x1080@60
 ```
 
 1. Disable cloud-init
@@ -30,7 +41,7 @@ export ROS_APT_SOURCE_VERSION=1.2.0
 1. Get Ubuntu version specific ROS debian package:
 
 ```bash
-# curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" 
+# curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb"
 
 # sudo apt install /tmp/ros2-apt-source.deb 
 
@@ -92,6 +103,13 @@ ros-jazzy-warehouse-ros-sqlite \
 ros-jazzy-open-manipulator-gui
 
 sudo apt install -y ros-jazzy-camera-calibration ros-jazzy-camera-calibration-parsers ros-jazzy-camera-info-manager ros-jazzy-compressed-depth-image-transport ros-jazzy-compressed-image-transport ros-jazzy-depth-image-proc ros-jazzy-depthai ros-jazzy-depthai-bridge ros-jazzy-depthai-descriptions ros-jazzy-depthai-examples ros-jazzy-depthai-filters ros-jazzy-depthai-ros-driver ros-jazzy-depthai-ros-msgs ros-jazzy-ffmpeg-image-transport-msgs ros-jazzy-foxglove-msgs ros-jazzy-image-geometry ros-jazzy-image-pipeline ros-jazzy-image-proc ros-jazzy-image-publisher  ros-jazzy-image-rotate ros-jazzy-image-transport-plugins ros-jazzy-image-view ros-jazzy-rviz-imu-plugin ros-jazzy-stereo-image-proc ros-jazzy-theora-image-transport ros-jazzy-tracetools-image-pipeline ros-jazzy-zstd-image-transport
+```
+
+1. Upgrade the system
+
+```bash
+sudo apt update
+sudo apt upgrade
 ```
 
 1. Initialize ROS dependencies
