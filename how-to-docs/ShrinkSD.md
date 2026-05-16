@@ -60,8 +60,7 @@ This will create the pi-image.img, which we can use with PiShrink.
 
 ```bash
 cd ~/pishrink
-sudo ./pishrink.sh ~/pishrink/pi-image.img
-```
+sudo ./pishrink.sh ~/pishrink/pi-image.img ~/pishrink/pi-image_shrunk.img
 
 ### Write image to SD
 
