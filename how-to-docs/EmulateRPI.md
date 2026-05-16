@@ -1,4 +1,4 @@
-# Ubuntu Server on Raspberry PI
+# Emulate a Raspberry PI
 
 Sources:
 
