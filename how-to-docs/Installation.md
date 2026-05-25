@@ -20,10 +20,85 @@ hdmi_mode=82
 video=HDMI-A-A:1920x1080@60
 ```
 
+1. Configure network via netplan
+
+Set this in '/etc/netplan/50-cloud-init.yaml':
+
+```text
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+      optional: true
+      dhcp4-overrides:
+        route-metric: 100
+  wifis:
+    wlan0:
+      optional: true
+      dhcp4: true
+      dhcp4-overrides:
+        route-metric: 200  # Lower priority compared to ethernet
+      access-points:
+        "robot-lan":
+          auth:
+            key-management: "psk"
+            password: "5e6daa2ac59efa98211d59e90eb9d3f1534236d2418f3cc32f4ec0039a83d356"
+
+```
+
+```bash
+sudo netplan try
+sudo netplan apply
+```
+
+1. Automatic switch Wifi and Ethernet
+
+## Write Wifi disable script
+
+```bash
+sudo nano /etc/networkd-dispatcher/routable.d/99-disable-wifi
+```
+
+```text
+#!/bin/bash
+
+ETHERNET_IFACE="eth0"    # adjust to your interface name
+WIFI_IFACE="wlan0"       # adjust to your interface name
+
+if [ "$IFACE" = "$ETHERNET_IFACE" ]; then
+    ip link set "$WIFI_IFACE" down
+fi
+```
+
+## Write Wifi enable script
+
+```bash
+sudo nano /etc/networkd-dispatcher/off.d/99-enable-wifi
+```
+
 1. Disable cloud-init
 
 ```bash
 sudo touch /etc/cloud/cloud-init.disabled
+```
+
+```text
+#!/bin/bash
+
+ETHERNET_IFACE="eth0"    # adjust to your interface name
+WIFI_IFACE="wlan0"       # adjust to your interface name
+
+if [ "$IFACE" = "$ETHERNET_IFACE" ]; then
+    ip link set "$WIFI_IFACE" up
+fi
+```
+
+## Make scripts executable
+
+```bash
+sudo chmod +x /etc/networkd-dispatcher/routable.d/99-disable-wifi
+sudo chmod +x /etc/networkd-dispatcher/off.d/99-enable-wifi
 ```
 
 1. Install ROS
@@ -73,6 +148,7 @@ python3-colcon-common-extensions \
 python3-colcon-core \
 python3-rosdep \
 libpython3-dev \
+teensy-loader-cli \
 python3-pip \
 ros-jazzy-ros-base \
 ros-dev-tools \
@@ -151,6 +227,8 @@ A way to check if were on a Raspberry Pi. Might come in handy:
 cat /sys/firmware/devicetree/base/model
 ```
 
+<<<--- Image: Linorobot_no_hw
+
 1. Add user to dialout groep
 
 ```bash
@@ -189,10 +267,28 @@ pio run -e pico2
 ```
 cd ~/rens_ws/src/rens_hardware/firmware
 
-pio run -e teensy40 -t upload
+pio run -e rens -t upload
 
 ```
 
 1. Install the 'Shutdown button'
 
 TODO:
+
+1. Install Zenoh
+
+```bash
+curl -L https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | sudo gpg --dearmor --yes --output /etc/apt/keyrings/zenoh-public-key.gpg
+
+
+echo "deb [signed-by=/etc/apt/keyrings/zenoh-public-key.gpg] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null
+
+sudo apt update
+
+sudo apt install zenoh-bridge-ros2dds ros-jazzy-rmw-cyclonedds-cpp
+
+```
+
+```bash
+echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> $HOME/.bashrc
+```
