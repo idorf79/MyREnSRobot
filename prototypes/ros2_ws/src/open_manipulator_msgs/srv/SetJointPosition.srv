@@ -1,0 +1,7 @@
+# Request: move joints to a position over path_time seconds
+open_manipulator_msgs/JointPosition joint_position
+float64 path_time
+
+---
+# Response
+bool is_planned

@@ -1,0 +1,13 @@
+arm_controller:
+  ros__parameters:
+
+    # Rate at which action feedback is published (Hz)
+    feedback_rate_hz: 10.0
+
+    # Extra seconds to wait beyond planned duration before timing out
+    goal_timeout_sec: 30.0
+
+    # MoveIt planning group names — must match your SRDF exactly.
+    # The default values match the official open_manipulator_x SRDF.
+    arm_planning_group:     arm
+    gripper_planning_group: gripper

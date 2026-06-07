@@ -8,3 +8,6 @@ Since the robot will contain an ESP32 at some point, and I like to experiment, s
 [ESP32 Prototyping](prototypes/esp32/prototyping/README.md)
 
 
+## Open Manipulator
+
+[Open Manipulator](prototypes/ros2_ws/prototype_openmanipulator.md)
