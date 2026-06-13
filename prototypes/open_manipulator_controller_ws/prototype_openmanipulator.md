@@ -30,3 +30,23 @@ After starting, in Rviz2 (MotionPlanning -> Joints)
 Then (MotionPlanning -> Planning):
 
 - "Plan & Execute"
+
+## Start own arm controller
+
+### Start controller
+
+```bash
+cd ~/projects/2526-MyRobot/prototypes/open_manipulator_controller_ws/
+source install/setup.bash
+
+ros2 launch open_manipulator_controller arm_controller.launch.py use_sim_time:=true
+```
+
+### Start client
+
+```bash
+cd ~/projects/2526-MyRobot/prototypes/open_manipulator_controller_ws/
+source install/setup.bash
+
+ros2 run open_manipulator_controller example_client
+```
