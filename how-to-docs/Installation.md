@@ -271,10 +271,6 @@ pio run -e rens -t upload
 
 ```
 
-1. Install the 'Shutdown button'
-
-TODO:
-
 1. Install Zenoh
 
 ```bash
@@ -292,3 +288,28 @@ sudo apt install zenoh-bridge-ros2dds ros-jazzy-rmw-cyclonedds-cpp
 ```bash
 echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> $HOME/.bashrc
 ```
+
+Username: rens
+Password: L3ct0r@@t
+
+>>>> REnS_32GbUbuntu2404_linorobot_260609_shrunk.img <<<<<
+
+1. Install the 'Shutdown button'
+
+Follow the README in ~/rens_hardware/shutdown-app
+
+>>>> REnS_32GbUbuntu2404_linorobot_260612.img <<<<<
+
+Start robot during boot
+
+>>>> REnS_32GbUbuntu2404_linorobot_260612_02.img <<<<<
+
+TODO: fix shutdown-app so robot does not shutdown if button is not connected correctly?
+TODO: Fix URDF:
+
+- IMU
+- LIDAR
+
+TODO: Change password of user 'rens'?
+
+TODO: check why shutdown takes so long
