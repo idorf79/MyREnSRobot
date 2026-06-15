@@ -36,7 +36,7 @@ Then (MotionPlanning -> Planning):
 ### Start controller
 
 ```bash
-cd ~/projects/2526-MyRobot/prototypes/open_manipulator_controller_ws/
+cd ~/projects/MyREnSRobot/prototypes/open_manipulator_controller_ws/
 source install/setup.bash
 
 ros2 launch open_manipulator_controller arm_controller.launch.py use_sim_time:=true
@@ -45,7 +45,7 @@ ros2 launch open_manipulator_controller arm_controller.launch.py use_sim_time:=t
 ### Start client
 
 ```bash
-cd ~/projects/2526-MyRobot/prototypes/open_manipulator_controller_ws/
+cd ~/projects/MyREnSRobot/prototypes/open_manipulator_controller_ws/
 source install/setup.bash
 
 ros2 run open_manipulator_controller example_client

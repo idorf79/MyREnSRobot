@@ -1,6 +1,6 @@
-# 2526-MyRobot
+# MyREnSRobot
 
-This repository contains all the information for my robot.
+This repository contains all the information for my REnS robot.
 
 ## Installation
 

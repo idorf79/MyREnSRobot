@@ -26,17 +26,17 @@ Start Gazebo:
 Run the laser filtering node:
 
 ```bash
-ros2 run laser_filters scan_to_scan_filter_chain   --ros-args -p scan_topic:=scan   -p target_frame:=base_link   --params-file ~/projects/2526-MyRobot/config/lidar_scan_filter/lidar_filters.yaml
+ros2 run laser_filters scan_to_scan_filter_chain   --ros-args -p scan_topic:=scan   -p target_frame:=base_link   --params-file ~/projects/MyREnSRobot/config/lidar_scan_filter/lidar_filters.yaml
 ```
 
 ```bash
-ros2 run laser_filters scan_to_scan_filter_chain   --ros-args -r /scan_filtered:=/scan   --params-file ~/projects/2526-MyRobot/config/lidar_scan_filter/lidar_filters.yaml
+ros2 run laser_filters scan_to_scan_filter_chain   --ros-args -r /scan_filtered:=/scan   --params-file ~/projects/MyREnSRobot/config/lidar_scan_filter/lidar_filters.yaml
 ```
 
 Start SLAM with "own" config:
 
 ```bash
-ros2 launch linorobot2_navigation slam.launch.py rviz:=true sim:=true params_file:=~/projects/2526-MyRobot/config/lidarscan_filter/slam.yaml
+ros2 launch linorobot2_navigation slam.launch.py rviz:=true sim:=true params_file:=~/projects/MyREnSRobot/config/lidarscan_filter/slam.yaml
 ```
 
 Start teleoperator:
@@ -50,5 +50,5 @@ TODO: Test Navigation with filtered lidar.
 Start Navigation:
 
 ```bash
-ros2 launch linorobot2_navigation slam.launch.py rviz:=true sim:=true params_file:=~/projects/2526-MyRobot/config/lidarscan_filter/slam.yaml
+ros2 launch linorobot2_navigation slam.launch.py rviz:=true sim:=true params_file:=~/projects/MyREnSRobot/config/lidarscan_filter/slam.yaml
 ```
