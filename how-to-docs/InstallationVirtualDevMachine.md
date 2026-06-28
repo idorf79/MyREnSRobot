@@ -2,8 +2,46 @@
 
 TODO: This is a copy of the REnS Robot Installation. Needs to be updated for Development
 
-Start with an up-to-date Ubuntu Server 24.04 version
-(sudo apt update && sudo apt upgrade)
+
+1. Create Virtual Machine with VirtualBox
+
+Create a new Virtual Machine.
+Use 'ubuntu-24.04.4-desktop-amd64.iso' as ISO.
+Don't use "Unattended Installation".
+
+Virtual hardware:
+- "Base Memory" -> 8Gb
+- "Number of CPUs" -> 4
+
+Virtual hard disk:
+- New Virtual Hard Disk
+- "Disk Size" -> 125GB
+
+After creation of the virtual machine, set:
+- "Video Memory" -> 128MB
+
+Start the Virtual machine and install Ubuntu:
+- "Language" -> English
+- "Keyboard layout" -> English (US)
+- "Connect to internet" -> Use wired connection
+- Choose "Interactive installation"
+- Choose "Extended selection"
+- "Create your account"
+  - "Your name" -> "REnS Developer"
+  - "Computer's name" -> "rensdevelvm0x"
+  - "username" -> "rens"
+  - "Password" -> "rens2627"
+
+
+After reboot:
+- Skip Ubuntu Pro
+- Don't share system data
+
+Run update & upgrade
+
+```bash
+sudo apt update && sudo apt upgrade
+```
 
 1. Disable automatic upgrade
 
@@ -12,95 +50,24 @@ sudo systemctl stop unattended-upgrades.service
 sudo systemctl disable unattended-upgrades.service
 ```
 
-1. Set max resolution for HDMI
+1. Install VirtualBox Guest Additions
 
-put this into '/boot/firmware/config.txt', under section '[all]':
+Mount the Guest Additions CD image.
 
-```text
-hdmi_group=2
-hdmi_mode=82
-video=HDMI-A-A:1920x1080@60
-```
-
-1. Configure network via netplan
-
-Set this in '/etc/netplan/50-cloud-init.yaml':
-
-```text
-network:
-  version: 2
-  ethernets:
-    eth0:
-      dhcp4: true
-      optional: true
-      dhcp4-overrides:
-        route-metric: 100
-  wifis:
-    wlan0:
-      optional: true
-      dhcp4: true
-      dhcp4-overrides:
-        route-metric: 200  # Lower priority compared to ethernet
-      access-points:
-        "robot-lan":
-          auth:
-            key-management: "psk"
-            password: "5e6daa2ac59efa98211d59e90eb9d3f1534236d2418f3cc32f4ec0039a83d356"
-
-```
+Run installer
 
 ```bash
-sudo netplan try
-sudo netplan apply
+sudo /media/rens/VBox_GA_..../VBoxLinuxAdditions.run
 ```
 
-1. Automatic switch Wifi and Ethernet
+Afterwards a reboot might be needed.
+Enable the "Shared Clipboard"
 
-## Write Wifi disable script
+
+1. Install extra tools
 
 ```bash
-sudo nano /etc/networkd-dispatcher/routable.d/99-disable-wifi
-```
-
-```text
-#!/bin/bash
-
-ETHERNET_IFACE="eth0"    # adjust to your interface name
-WIFI_IFACE="wlan0"       # adjust to your interface name
-
-if [ "$IFACE" = "$ETHERNET_IFACE" ]; then
-    ip link set "$WIFI_IFACE" down
-fi
-```
-
-## Write Wifi enable script
-
-```bash
-sudo nano /etc/networkd-dispatcher/off.d/99-enable-wifi
-```
-
-1. Disable cloud-init
-
-```bash
-sudo touch /etc/cloud/cloud-init.disabled
-```
-
-```text
-#!/bin/bash
-
-ETHERNET_IFACE="eth0"    # adjust to your interface name
-WIFI_IFACE="wlan0"       # adjust to your interface name
-
-if [ "$IFACE" = "$ETHERNET_IFACE" ]; then
-    ip link set "$WIFI_IFACE" up
-fi
-```
-
-## Make scripts executable
-
-```bash
-sudo chmod +x /etc/networkd-dispatcher/routable.d/99-disable-wifi
-sudo chmod +x /etc/networkd-dispatcher/off.d/99-enable-wifi
+sudo apt install terminator screen curl
 ```
 
 1. Install ROS
@@ -108,20 +75,13 @@ sudo chmod +x /etc/networkd-dispatcher/off.d/99-enable-wifi
 The version mentioned next, was detected by using:
 
 ```bash
-curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}'
-```
-
-```bash
-export ROS_APT_SOURCE_VERSION=1.2.0
+export ROS_APT_SOURCE_VERSION=`curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}'
+`
 ```
 
 1. Get Ubuntu version specific ROS debian package:
 
 ```bash
-# curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb"
-
-# sudo apt install /tmp/ros2-apt-source.deb 
-
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
@@ -180,21 +140,15 @@ ros-jazzy-dynamixel-hardware-interface \
 ros-jazzy-warehouse-ros-sqlite \
 ros-jazzy-open-manipulator-gui
 
-sudo apt install -y ros-jazzy-camera-calibration ros-jazzy-camera-calibration-parsers ros-jazzy-camera-info-manager ros-jazzy-compressed-depth-image-transport ros-jazzy-compressed-image-transport ros-jazzy-depth-image-proc ros-jazzy-depthai ros-jazzy-depthai-bridge ros-jazzy-depthai-descriptions ros-jazzy-depthai-examples ros-jazzy-depthai-filters ros-jazzy-depthai-ros-driver ros-jazzy-depthai-ros-msgs ros-jazzy-ffmpeg-image-transport-msgs ros-jazzy-foxglove-msgs ros-jazzy-image-geometry ros-jazzy-image-pipeline ros-jazzy-image-proc ros-jazzy-image-publisher  ros-jazzy-image-rotate ros-jazzy-image-transport-plugins ros-jazzy-image-view ros-jazzy-rviz-imu-plugin ros-jazzy-stereo-image-proc ros-jazzy-theora-image-transport ros-jazzy-tracetools-image-pipeline ros-jazzy-zstd-image-transport
+
 ```
+
 
 1. Upgrade the system
 
 ```bash
 sudo apt update
 sudo apt upgrade
-```
-
-1. Initialize ROS dependencies
-
-```bash
-sudo rosdep init
-rosdep update
 ```
 
 1. Add ROS environment to bash shell by default
@@ -211,67 +165,26 @@ If you want to continue in the same terminal, source your `~/.bashrc` :)
 mkdir -p ~/rens_tmp
 cd ~/rens_tmp
 wget https://github.com/AvansTi/rens/raw/refs/heads/jazzy_rens/install_linorobot2.bash
-bash install_linorobot2.bash 2wd a1 oakdpro
+bash install_linorobot2.bash 2wd
 
+rm -rf ~/rens_tmp
 
 sudo reboot
 ```
 
-1. Rebuild all the linorobot packages:
+
+1. Enable Gazebo build
 
 ```bash
-colcon build --symlink-install --packages-skip micro_ros_msgs drive_base_msgs
+rm ~/rens_ws/src/rens/linorobot2_gazebo/COLCON_IGNORE
+cd ~/rens_ws/
+colcon build --symlink-install
+
+source install/setup.bash
 ```
 
-A way to check if were on a Raspberry Pi. Might come in handy:
 
-```bash
-cat /sys/firmware/devicetree/base/model
-```
-
-<<<--- Image: Linorobot_no_hw
-
-1. Add user to dialout groep
-
-```bash
-sudo usermod -a -G dialout rens
-```
-
-1. Disable auto update/upgrade
-
-TODO: Something with 'sudo systemctl disable unattended-upgrades.service'
-
-TOOD: this needs fixing/updating: Teensy not used lateron
-
-1. Install the RenS Hardware SW
-
-```bash
-cd ~/rens_tmp
-curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
-python3 get-platformio.py
-
-echo "export PATH=\${PATH}:~/.platformio/penv/bin" >> $HOME/.bashrc
-source ~/.bashrc
-
-cd ~
-git clone https://github.com/AvansTi/rens_hardware.git rens_hardware
-
-sudo cp ~/rens_hardware/config/udev_rules.d/rens_hw.rules /etc/udev/rules.d
-
-cd ~/rens_hardware/firmware
-
-pio run -e rens
-pio run -e pico2
-```
-
-1. Upload firmware to MCU
-
-```
-cd ~/rens_ws/src/rens_hardware/firmware
-
-pio run -e rens -t upload
-
-```
+>>>> DONE UNTIL HERE <<<<
 
 1. Install Zenoh
 
@@ -291,27 +204,30 @@ sudo apt install zenoh-bridge-ros2dds ros-jazzy-rmw-cyclonedds-cpp
 echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> $HOME/.bashrc
 ```
 
-Username: rens
-Password: L3ct0r@@t
 
->>>> REnS_32GbUbuntu2404_linorobot_260609_shrunk.img <<<<<
+1. Make the disks as small as possible
 
-1. Install the 'Shutdown button'
+```bash
+dd if=/dev/zero of=/zerofile bs=1M status=progress
+rm -f /zerofile
 
-Follow the README in ~/rens_hardware/shutdown-app
+sudo shutdown -h now
+```
 
->>>> REnS_32GbUbuntu2404_linorobot_260612.img <<<<<
+1. On host machine
 
-Start robot during boot
+```powershell
+cd C:\VM\2627-REnSDev
+& "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifymedium disk "C:\VM\2627-REnSDev\2627-REnSDev.vdi" --compact
+```
 
->>>> REnS_32GbUbuntu2404_linorobot_260612_02.img <<<<<
 
-TODO: fix shutdown-app so robot does not shutdown if button is not connected correctly?
-TODO: Fix URDF:
 
-- IMU
-- LIDAR
+TODO:
 
-TODO: Change password of user 'rens'?
-
-TODO: check why shutdown takes so long
+- add 'rens' to group 'dailout'
+- install Visual Studio Code
+- install Arduino IDE
+- generate SSH-keys (?)
+- install Docker (?)
+- configure GIT (user & email)
