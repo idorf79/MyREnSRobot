@@ -228,4 +228,5 @@ TODO:
 - add 'rens' to group 'dailout'
 - install Visual Studio Code
 - install Arduino IDE
+- generate SSH-keys (?)
 - configure GIT (user & email)
