@@ -220,3 +220,12 @@ sudo shutdown -h now
 cd C:\VM\2627-REnSDev
 & "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifymedium disk "C:\VM\2627-REnSDev\2627-REnSDev.vdi" --compact
 ```
+
+
+
+TODO:
+
+- add 'rens' to group 'dailout'
+- install Visual Studio Code
+- install Arduino IDE
+- configure GIT (user & email)
