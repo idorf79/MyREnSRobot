@@ -173,6 +173,10 @@ void vTaskupdateMatrix(void *pvParameters)
 
     if (showTemperature == true)
     {
+      if (temperature > 0.0)
+      {
+        matrix.print(" "); // add space. Temperatures lower than  0.0 will add a "-"
+      }
       if (temperature < 0.0)
       {
         matrix.setTextColor(matrix.Color(0, 0, 255));
@@ -185,14 +189,15 @@ void vTaskupdateMatrix(void *pvParameters)
       {
         matrix.setTextColor(matrix.Color(255, 0, 0));
       }
-      matrix.print(temperature, 2);
-
+      matrix.print(temperature, 1);
+  
+      matrix.setTextColor(matrix.Color(255, 255, 255));
       matrix.print(" C");
     }
     else
     {
       matrix.print(humidity, 0);
-      matrix.print(" RH %");
+      matrix.print(" % RH");
     }
 
     matrix.drawPixel(28, 0, connectionDot);
