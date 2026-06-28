@@ -229,4 +229,5 @@ TODO:
 - install Visual Studio Code
 - install Arduino IDE
 - generate SSH-keys (?)
+- install Docker (?)
 - configure GIT (user & email)
