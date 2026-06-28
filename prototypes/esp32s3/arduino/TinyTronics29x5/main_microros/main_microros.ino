@@ -117,7 +117,8 @@ void error_loop()
 void vInitMicroROS()
 {
 
-  set_microros_wifi_transports("robot-lan", "robot-lan-2024!", "10.10.45.40", 8888);
+  //set_microros_wifi_transports("robot-lan", "robot-lan-2024!", "10.10.45.40", 8888);
+  set_microros_transports();
 
   allocator = rcl_get_default_allocator();
 
@@ -317,14 +318,14 @@ void vInitSubscriber()
 
 void setup()
 {
+  xTaskCreatePinnedToCore(vTaskupdateTemperatureAndHumidity, "getSensorData", 5000, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(vTaskupdateMatrix, "updateMatrix", 5000, NULL, 10, NULL, 1);
 
   vInitMicroROS();
 
   vInitSubscriber();
 
   xTaskCreatePinnedToCore(vTaskRosConnectionCheck, "uRosAlivePublisher", 5000, NULL, 10, NULL, 0);
-  xTaskCreatePinnedToCore(vTaskupdateTemperatureAndHumidity, "getSensorData", 5000, NULL, 5, NULL, 1);
-  xTaskCreatePinnedToCore(vTaskupdateMatrix, "updateMatrix", 5000, NULL, 10, NULL, 1);
   xTaskCreatePinnedToCore(vTaskRosPublisher, "uTemperaturePublisher", 5000, NULL, 10, NULL, 0);
 }
 
