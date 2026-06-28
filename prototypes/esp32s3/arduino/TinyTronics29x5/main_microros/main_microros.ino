@@ -196,8 +196,8 @@ void vTaskupdateMatrix(void *pvParameters)
     }
     else
     {
-      matrix.print(humidity, 0);
-      matrix.print(" % RH");
+      matrix.print(humidity, 1);
+      matrix.print(" % ");
     }
 
     matrix.drawPixel(28, 0, connectionDot);
@@ -205,7 +205,7 @@ void vTaskupdateMatrix(void *pvParameters)
     matrix.drawPixel(28, 2, updateDot);
 
     matrix.show(); // Update matrix
-    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(40));
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(150));
   }
 }
 
