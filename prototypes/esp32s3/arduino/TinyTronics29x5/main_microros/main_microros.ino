@@ -65,7 +65,7 @@
   }
 
 /*************************************************************************************/
-// ROS2 command to publish a topic to "test_topic" (which takes a Int32):
+// ROS2 command to publish a topic to "command" (which takes a Int32):
 // ros2 topic pub /command std_msgs/msg/Int32 "data: 1" --once
 
 AHT20 aht20;
@@ -195,9 +195,9 @@ void vTaskupdateMatrix(void *pvParameters)
       matrix.print(" RH %");
     }
 
-    matrix.drawPixel(28, 0, commandDot);
-    matrix.drawPixel(28, 1, updateDot);
-    matrix.drawPixel(28, 2, connectionDot);
+    matrix.drawPixel(28, 0, connectionDot);
+    matrix.drawPixel(28, 1, commandDot);
+    matrix.drawPixel(28, 2, updateDot);
 
     matrix.show(); // Update matrix
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(40));
@@ -318,15 +318,15 @@ void vInitSubscriber()
 
 void setup()
 {
-  xTaskCreatePinnedToCore(vTaskupdateTemperatureAndHumidity, "getSensorData", 5000, NULL, 5, NULL, 1);
-  xTaskCreatePinnedToCore(vTaskupdateMatrix, "updateMatrix", 5000, NULL, 10, NULL, 1);
+  xTaskCreatePinnedToCore(vTaskupdateTemperatureAndHumidity, "getSensorData", 2048, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(vTaskupdateMatrix, "updateMatrix", 4096, NULL, 10, NULL, 1);
 
   vInitMicroROS();
 
   vInitSubscriber();
 
-  xTaskCreatePinnedToCore(vTaskRosConnectionCheck, "uRosAlivePublisher", 5000, NULL, 10, NULL, 0);
-  xTaskCreatePinnedToCore(vTaskRosPublisher, "uTemperaturePublisher", 5000, NULL, 10, NULL, 0);
+  xTaskCreatePinnedToCore(vTaskRosConnectionCheck, "uRosAlivePublisher", 4096, NULL, 10, NULL, 0);
+  xTaskCreatePinnedToCore(vTaskRosPublisher, "uTemperaturePublisher", 4096, NULL, 10, NULL, 0);
 }
 
 void loop()
