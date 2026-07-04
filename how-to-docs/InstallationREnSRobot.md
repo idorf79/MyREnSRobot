@@ -304,7 +304,10 @@ Start robot during boot
 
 >>>> REnS_32GbUbuntu2404_linorobot_260612_02.img <<<<<
 
-TODO: fix shutdown-app so robot does not shutdown if button is not connected correctly?
+fix shutdown-app so robot does not shutdown if button is not connected correctly?
+
+>>>> REnS_32GbUbuntu2404_linorobot_260704.img <<<<<
+
 TODO: Fix URDF:
 
 - IMU
