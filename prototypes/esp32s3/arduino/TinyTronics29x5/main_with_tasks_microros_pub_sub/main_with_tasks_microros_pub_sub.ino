@@ -81,6 +81,8 @@ float temperature = -14.9;
 uint32_t command = 0;
 
 bool showTemperature = true;
+uint16_t connectionDot = matrix.Color(0, 0, 255);
+
 
 rcl_publisher_t publisher;
 rcl_subscription_t subscriber;
@@ -95,6 +97,8 @@ void error_loop()
   while (1)
   {
     //    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    connectionDot = matrix.Color(255, 0, 0);
+
     delay(100);
   }
 }
@@ -172,7 +176,9 @@ void vTaskupdateMatrix(void *pvParameters)
       matrix.print(" RH %");
       showTemperature = true;
     }
-    matrix.show(); // Update matrix
+    matrix.drawPixel(28, 4, connectionDot);
+
+    matrix.show();  // Update matrix
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5000));
   }
 }
@@ -190,15 +196,23 @@ void vTaskRosPublisher(void *pvParameters)
       "temperature"));
 
   msg.data = 0;
+  connectionDot = matrix.Color(0, 255, 0);
 
   xLastWakeTime = xTaskGetTickCount();
 
   while (true)
   {
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5000));
-    // Publish to the topic here
-    RCSOFTCHECK(rcl_publish(&publisher, &msg, NULL));
-    msg.data = temperature * 100;
+    if (rmw_uros_ping_agent(100,1) == RMW_RET_OK) {
+      msg.data = temperature * 100;
+      // Publish to the topic here
+      RCSOFTCHECK(rcl_publish(&publisher, &msg, NULL));
+      connectionDot = matrix.Color(0,255,0);
+    }
+    else
+    {
+      connectionDot = matrix.Color(255,0,0);
+    }
   }
 }
 
@@ -229,15 +243,16 @@ void vInitSubscriber()
   RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
 }
 
-void setup()
-{
+void setup() {
+
+  // First start the "local" tasks.
   xTaskCreatePinnedToCore(vTaskupdateTemperatureAndHumidity, "getSensorData", 5000, NULL, 5, NULL, 1);
   xTaskCreatePinnedToCore(vTaskupdateMatrix, "updateMatrix", 5000, NULL, 10, NULL, 1);
-
-
+  
+  // Then Initialize ROS and start the ROS tasks
   vInitMicroROS();
-
   vInitSubscriber();
+
   xTaskCreatePinnedToCore(vTaskRosPublisher, "uRosAlivePublisher", 5000, NULL, 10, NULL, 0);
 }
 
