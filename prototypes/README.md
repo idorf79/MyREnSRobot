@@ -69,11 +69,18 @@ Afterwards build the needed tools, in a terminal where ROS2 is NOT sourced!
 ```bash
 cd <>/components/micro_ros_espidf_component
 
-make -f libmicrosros ${PWD}/micro_ros_dev/install
+make -f libmicroros.mk ${PWD}/micro_ros_dev/install
 ```
 
 Also make sure RMW_IMPLEMENTATION is not set, or set to 'rmw_microxrcedds'
 Then you can build the ESP MicroROS component.
+
+Install needed python modules in v5.5.5:
+
+```bash
+source .espressif/tools/python/v5.5.5/venv/bin/activate
+pip install catkin_pkg colcon-common-extensions lark
+``
 
 ## ROS2 in Docker commands
 
