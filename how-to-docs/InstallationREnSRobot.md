@@ -313,6 +313,16 @@ Fix is in '/etc/systemd/system/start_robot.service'.
 
 >>>> REnS_32GbUbuntu2404_linorobot_260826.img <<<<<
 
+Install FoxGlove Bridge
+
+```bash
+sudo apt install ros-jazzy-foxglove-bridge
+```
+
+
+
+>>>> <<<<
+
 TODO: Fix URDF:
 
 - IMU

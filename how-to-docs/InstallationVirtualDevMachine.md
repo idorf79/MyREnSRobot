@@ -257,3 +257,4 @@ TODO:
 - generate SSH-keys (?)
 - install Docker (?)
 - configure GIT (user & email)
+- install FoxGlove
