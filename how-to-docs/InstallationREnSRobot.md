@@ -323,10 +323,12 @@ sudo apt install ros-jazzy-foxglove-bridge
 
 >>>> <<<<
 
+TODO: Update ROS2 Depthai to V3
 TODO: Fix URDF:
 
 - IMU
 - LIDAR
+- OAK-D Pro camera (configurable)
 
 TODO: Change password of user 'rens'?
 

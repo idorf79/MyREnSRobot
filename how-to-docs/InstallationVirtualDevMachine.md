@@ -251,6 +251,7 @@ You now should have an Appliance which you can share :)
 
 TODO:
 - install ROS2 RQT Graph
+- Update DepthAI driver to V3
 - add 'rens' to group 'dailout'
 - install Visual Studio Code
 - install Arduino IDE
