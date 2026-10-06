@@ -67,7 +67,7 @@ Enable the "Shared Clipboard"
 1. Install extra tools
 
 ```bash
-sudo apt install terminator screen curl
+sudo apt install terminator screen curl git
 ```
 
 1. Install ROS
